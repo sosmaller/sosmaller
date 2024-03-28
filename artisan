@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+/**
+* Create The Application
+*/
+
+$app = require __DIR__.'/bootstrap/app.php';
+
+/**
+* Run The Artisan Application
+*/
+$app->make();
