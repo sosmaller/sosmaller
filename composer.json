@@ -1,6 +1,6 @@
 {
-  "name": "sosmall/sosmall",
-  "homepage": "https://github.com/sosmaller/sosmall",
+  "name": "sosmaller/sosmaller",
+  "homepage": "https://github.com/sosmaller/sosmaller",
   "description": "This is a php Framework",
   "type": "project",
   "license": "MIT",
@@ -13,7 +13,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "sosmall/framework": "1.0.0"
+    "sosmaller/framework": ">=1.0.0"
   },
   "autoload": {
     "psr-4": {
