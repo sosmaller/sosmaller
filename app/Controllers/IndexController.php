@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use App\Jobs\TestJob;
 use App\Models\UserModel;
-use Yulore\Components\Db;
+use Sosmall\Components\Db;
 use App\Models\UserMongoModel;
-use Yulore\Components\Queue;
+use Sosmall\Components\Queue;
 
 class IndexController extends BaseController
 {
