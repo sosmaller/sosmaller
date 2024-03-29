@@ -3,7 +3,7 @@
 namespace App\Console;
 
 
-use Sosmaller\Crontab;
+use SoSmaller\Crontab;
 
 class Kernel extends Crontab
 {
