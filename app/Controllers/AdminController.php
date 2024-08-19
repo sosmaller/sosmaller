@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use Exception;
-use App\Models\UserModel;
 use App\Traits\BaseTrait;
 
 
@@ -65,10 +64,11 @@ class AdminController
             $this->error('参数错误');
         }
         $field = $this->_field();
+        $order = $this->_order();
         $where = $this->_where();
         array_push($where, ['id', '=', $id]);
         $model = $this->getModel();
-        $data = $model::getOne($where, $field);
+        $data = $model::getOne($where, $field, $order);
         $this->success('', $data);
     }
 
@@ -89,6 +89,10 @@ class AdminController
     /** 修改记录 */
     public function edit()
     {
+        $id = $this->request->get('id');
+        if (!$id) {
+            $this->error('参数错误');
+        }
         $model = $this->getModel();
         $params = $this->request->all();
         $attrs = $model->getAttribute();
@@ -96,6 +100,23 @@ class AdminController
         $where = $this->_where();
         array_push($where, ['id', '=', $data['id']]);
         if ($model::edit($where, $data)) {
+            $this->success('修改成功');
+        }
+        $this->error('修改失败');
+    }
+
+    /** 修改状态 */
+    public function status()
+    {
+        $id = $this->request->get('id');
+        if (!$id) {
+            $this->error('参数错误');
+        }
+        $status = $this->request->get('status');
+        $model = $this->getModel();
+        $where = $this->_where();
+        array_push($where, ['id', '=', $id]);
+        if ($model::edit($where, ['status' => $status])) {
             $this->success('修改成功');
         }
         $this->error('修改失败');
@@ -111,7 +132,7 @@ class AdminController
         $where = $this->_where();
         array_push($where, ['id', '=', $id]);
         $model = $this->getModel();
-        if ($model::edit($where, ['status' => 0])) {
+        if ($model::edit($where, ['status' => -1])) {
             $this->success('删除成功');
         }
         $this->error('删除失败');
@@ -121,9 +142,12 @@ class AdminController
     protected function _list()
     {
         $field = $this->_field();
+        $order = $this->_order();
+        $page = $this->_page();
+        $group = $this->_group();
         $where = $this->_where();
         $model = $this->getModel();
-        $data = $model::getAll($where, $field);
+        $data = $model::getAll($where, $field, $page, $order, $group);
         return $data;
     }
 
@@ -137,6 +161,24 @@ class AdminController
     protected function _field()
     {
         return $field = [];
+    }
+
+    /** 排序字段 */
+    protected function _order()
+    {
+        return $field = [];
+    }
+
+    /** 分组 */
+    protected function _group()
+    {
+        return $group = [];
+    }
+
+    /** 分页查询 */
+    protected function _page()
+    {
+        return $page = [];
     }
 
     /**
