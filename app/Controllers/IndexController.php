@@ -35,6 +35,7 @@ class IndexController extends BaseController
         //$res = UserMongoModel::getOne(['sid' => '82beabc0eaaa0f1a7e4837c92c330af1'], ['apikey']);
         //var_dump($res);
         //app('queue')->onQueue(TestJob::class, ['name' => 'yangchengsheng']);
+        
         $this->response(0, ['hello word']);
     }
 
