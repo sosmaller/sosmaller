@@ -7,7 +7,6 @@ trait BaseTrait
     /**
      * 产品前缀，用于区分不同项目；
      */
-    protected $apikey;
     protected $prefix;
     protected $cache;
     protected $pids;
@@ -16,7 +15,7 @@ trait BaseTrait
     {
         $this->prefix = config('app_prefix');
         $this->pids = config("app_pids");
-        //$this->cache = app('redis')->connection();
+        $this->cache = \SoSmaller\Components\Redis::instance()->connection();
     }
 
     /** admin使用 操作成功 */

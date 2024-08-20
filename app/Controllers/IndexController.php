@@ -4,13 +4,15 @@ namespace App\Controllers;
 
 use App\Jobs\TestJob;
 use App\Models\UserModel;
+use SoSmaller\Components\Config;
 use SoSmaller\Components\Db;
 use App\Models\UserMongoModel;
 use SoSmaller\Components\Queue;
+use SoSmaller\Components\Redis;
+use SoSmaller\Components\Request;
 
 class IndexController extends BaseController
 {
-
     public function index()
     {
         //$res = UserModel::getAll([]);
@@ -35,8 +37,25 @@ class IndexController extends BaseController
         //$res = UserMongoModel::getOne(['sid' => '82beabc0eaaa0f1a7e4837c92c330af1'], ['apikey']);
         //var_dump($res);
         //app('queue')->onQueue(TestJob::class, ['name' => 'yangchengsheng']);
-        
-        $this->response(0, ['hello word']);
+
+        // $this->request = app('request');
+
+        //$conf = Config::instance()->getConfig('mailer');
+
+        //$res = Redis::instance()->set('conf',json_encode($conf));
+
+        //$mailer = app('config')->getConfig('mailer');
+        //$mailer = Config::instance()->getConfig('mailer');
+
+        //$request = app('request')->get('name');
+
+        //$request = Request::instance()->get('name');
+
+        //app('queue')->onQueue();
+
+        //Queue::instance()->onQueue();
+
+        $this->response(0, ['hello']);
     }
 
 }

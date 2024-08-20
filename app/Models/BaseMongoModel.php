@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Exception;
+use SoSmaller\Components\Mongodb;
 
 class BaseMongoModel
 {
     protected static $tableSuffix = ''; //分表
     protected static $connection = ''; //指定数据库
     protected static $table = ''; //指定表
-    protected static $timestamps = true;
+    protected static $timestamps = false;
 
     public static function getTable()
     {
@@ -70,7 +71,7 @@ class BaseMongoModel
         }
         return $_where;
     }
-    
+
 
     /**
      * 获取一条数据
@@ -149,7 +150,7 @@ class BaseMongoModel
      */
     public static function add($data, $getId = false, $param = [])
     {
-        return app('mongodb')->connection(static::$connection ? static::$connection : 'default')->insert(static::getTable(), $data, $getId);
+        return Mongodb::instance()->connection(static::$connection ? static::$connection : 'default')->insert(static::getTable(), $data, $getId);
     }
 
     /**
@@ -163,7 +164,7 @@ class BaseMongoModel
     public static function edit($where, $data)
     {
         $where = self::buildQuery($where);
-        return app('mongodb')->connection(static::$connection ? static::$connection : 'default')->update(static::getTable(), $where, ['$set' => $data]);
+        return Mongodb::instance()->connection(static::$connection ? static::$connection : 'default')->update(static::getTable(), $where, ['$set' => $data]);
     }
 
     /**
@@ -174,7 +175,7 @@ class BaseMongoModel
     public static function delete($where)
     {
         $where = self::buildQuery($where);
-        return app('mongodb')->connection(static::$connection ? static::$connection : 'default')->delete(static::getTable(), $where);
+        return Mongodb::instance()->connection(static::$connection ? static::$connection : 'default')->delete(static::getTable(), $where);
     }
 
     /**
@@ -186,7 +187,7 @@ class BaseMongoModel
     public static function getCount($where)
     {
         $where = self::buildQuery($where);
-        return app('mongodb')->connection(static::$connection ? static::$connection : 'default')->count(static::getTable(), $where);
+        return Mongodb::instance()->connection(static::$connection ? static::$connection : 'default')->count(static::getTable(), $where);
     }
 
     /**
@@ -214,7 +215,7 @@ class BaseMongoModel
      */
     public static function query($where, $option)
     {
-        return app('mongodb')->connection(static::$connection ? static::$connection : 'default')->select(static::getTable(), $where, $option);
+        return Mongodb::instance()->connection(static::$connection ? static::$connection : 'default')->select(static::getTable(), $where, $option);
     }
 
 }

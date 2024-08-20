@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Exception;
 use App\Traits\BaseTrait;
+use SoSmaller\Components\Request;
 
 
 /**
@@ -31,7 +32,7 @@ class AdminController
         $this->init();
         $this->method = $params['method'];
         $this->controller = $params['controller'];
-        $this->request = app('request');
+        $this->request = Request::instance();
 
         #访问鉴权
         $this->checkAccess();

@@ -24,6 +24,6 @@ return [
         'mail_password' => 'test!@#test',
         'mail_from_address' => 'test@263.com',
         'mail_from_name' => '服务部',
-        'mail_to_address' => ['杨线上' => '369363564@qq.com']
+        'mail_to_address' => ['杨先生' => '369363564@qq.com']
     ]
 ];

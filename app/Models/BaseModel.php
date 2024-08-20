@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Exception;
+use SoSmaller\Components\Db;
 
 class BaseModel
 {
@@ -27,6 +28,15 @@ class BaseModel
         return static::$tableSuffix = '_' . $key; //用key分表
     }
 
+    /**
+     * @desc 表字段的属性
+     * @return array
+     */
+    public function getAttribute()
+    {
+        //$filed => [type, required,key,default,max,min]
+        return [];
+    }
 
     /**
      * 查询条件封装
@@ -62,9 +72,9 @@ class BaseModel
                 }
                 $_where .= $key . ' ' . $opt . '("' . implode('","', $val) . '")';
             } elseif ($opt === 'like') {
-                $_where .= $key .' '. $opt . " '%$val%'";
+                $_where .= $key . ' ' . $opt . " '%$val%'";
             } else {
-                $_where .= $key .' '. $opt . " '$val'";
+                $_where .= $key . ' ' . $opt . " '$val'";
             }
         }
         return $_where;
@@ -99,6 +109,26 @@ class BaseModel
     }
 
     /**
+     * @param string $where
+     * @param string $field
+     * @param array $order
+     * @param array $param
+     * @return mixed
+     * @throws Exception
+     */
+    public static function getField($where, $field, $order = [], $param = [])
+    {
+        if (!is_array($order)) {
+            throw new Exception("Order is must a array" . print_r($order, true));
+        }
+        $res = static::getOne($where, [$field], $order, $param);
+        if (isset($res[$field])) {
+            return $res[$field];
+        }
+        return false;
+    }
+
+    /**
      * 获取批量数据
      * @param $where array use buildQuery
      * @param $field array eg ['id','title']
@@ -109,7 +139,7 @@ class BaseModel
      * @return mixed
      * @throws Exception
      */
-    public static function getAll($where, $field = ['*'], $page = [], $order = [], $group = '', $param = [])
+    public static function getAll($where, $field = [], $page = [], $order = [], $group = '', $param = [])
     {
         if (!is_array($field)) {
             throw new Exception("GetAll Field is must a array" . print_r($field, true));
@@ -146,7 +176,11 @@ class BaseModel
         }
         array_walk($data, function (&$val) {
             $val = addslashes($val);
+            $val = trim($val);
         });
+        if (static::$timestamps) {
+            $data['created_at'] = $data['updated_at'] = time();
+        }
         $keys = implode(',', array_keys($data));
         $values = implode("','", array_values($data));
         $table = static::getTable();
@@ -166,15 +200,33 @@ class BaseModel
         if (!is_array($data)) {
             throw new Exception("Data is must a array" . print_r($data, true));
         }
+        if (static::$timestamps) {
+            $data['updated_at'] = time();
+        }
         $set = '';
         foreach ($data as $key => $value) {
-            $set .= $key . "='" . addslashes($value) . "',";
+            $set .= $key . "='" . trim(addslashes($value)) . "',";
         }
         $set = trim($set, ',');
         $table = static::getTable();
         $where = self::buildQuery($where);
         $where = $where ? 'where ' . $where : '';
         $sql = 'update ' . $table . ' set ' . $set . ' ' . $where;
+        return self::exec($sql, $prepare = []);
+    }
+
+    /**
+     * 删除数据
+     * @param $where
+     * @return bool
+     * @throws Exception
+     */
+    public static function delete($where)
+    {
+        $table = static::getTable();
+        $where = self::buildQuery($where);
+        $where = $where ? 'where ' . $where : '';
+        $sql = 'delete from ' . $table . ' ' . $where;
         return self::exec($sql, $prepare = []);
     }
 
@@ -212,7 +264,7 @@ class BaseModel
      */
     public static function query($sql, $prepare = [], $query_model = 'row')
     {
-        return app('db')->connection(static::$connection ? static::$connection : 'default')->query($sql, $prepare, $query_model);
+        return Db::instance()->connection(static::$connection ? static::$connection : 'default')->query($sql, $prepare, $query_model);
     }
 
     /**
@@ -224,6 +276,6 @@ class BaseModel
      */
     public static function exec($sql, $prepare = [], $getId = false)
     {
-        return app('db')->connection(static::$connection ? static::$connection : 'default', 'write')->exec($sql, $prepare, $getId);
+        return Db::instance()->connection(static::$connection ? static::$connection : 'default', 'write')->exec($sql, $prepare, $getId);
     }
 }

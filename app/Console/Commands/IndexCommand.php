@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use SoSmaller\Components\Logger;
+
 class IndexCommand extends BaseCommand
 {
     public function handle()
     {
-        app('logger')->info('IndexCommand');
+        Logger::instance()->info('IndexCommand');
         echo "IndexCommand\n";
         return true;
     }
