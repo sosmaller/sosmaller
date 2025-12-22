@@ -3,3 +3,6 @@
 > 1.git clone https://github.com/sosmaller/sosmaller.git
 
 > 2.composer update
+
+> 3.composer commit 
+
